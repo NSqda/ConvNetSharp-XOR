@@ -49,7 +49,7 @@ namespace XOR
         {
 
             var network = new Net<double>();
-            network.AddLayer(new InputLayer(1, 1, 2));
+            network.AddLayer(new InputLayer(1, 1, 2, n));
             network.AddLayer(new FullyConnLayer(6));
             network.AddLayer(new ReluLayer());
             network.AddLayer(new FullyConnLayer(2));
@@ -71,9 +71,9 @@ namespace XOR
             data.Add(new[] { 1, 1 });
             label.Add(0);
 
-            var trainer = new SgdTrainer<double>(network) { LearningRate = 0.01, BatchSize = label.Count };
-
             var n = label.Count;
+            var trainer = new SgdTrainer<double>(network) { LearningRate = 0.01, BatchSize = n };
+
 
             var x = BuilderInstance.Volume.SameAs(new Shape(1, 1, 2, n));
             var y = BuilderInstance.Volume.SameAs(new Shape(1, 1, 2, n));
