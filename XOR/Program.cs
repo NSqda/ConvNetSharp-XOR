@@ -15,6 +15,7 @@ namespace XOR
         static private Func<double, int> isOne = (x) => x > 0.5 ? 1 : 0;
         static void Main(string[] args)
         {
+            BuilderInstance<double>.Volume = new VolumeBuilder();
             Program program = new Program();
 
             var net = program.XOR();
@@ -34,7 +35,8 @@ namespace XOR
 
                     var result = net.Forward(input);
 
-                    Console.WriteLine(isOne(result.Get(0)));
+                    Console.WriteLine(isOne(result.Get(0, 0, 0)));
+
                 }
 
                 if (line[0].Equals("exit"))
@@ -49,12 +51,12 @@ namespace XOR
         {
 
             var network = new Net<double>();
-            network.AddLayer(new InputLayer(1, 1, 2, n));
+            network.AddLayer(new InputLayer(1, 1, 2));
             network.AddLayer(new FullyConnLayer(6));
             network.AddLayer(new ReluLayer());
             network.AddLayer(new FullyConnLayer(2));
             network.AddLayer(new ReluLayer());
-            network.AddLayer(new RegressionLayer());
+            network.AddLayer(new RegressionLayer ());
 
             List<int[]> data = new List<int[]>();
             List<int> label = new List<int>();
@@ -80,7 +82,7 @@ namespace XOR
 
             for (var i = 0; i < n; i++)
             {
-                y.Set(0, 0, label[i], i, 1.0);
+                y.Set(0, 0, 0, i, label[i]);
 
                 x.Set(0, 0, 0, i, data[i][0]);
                 x.Set(0, 0, 1, i, data[i][1]);
@@ -106,8 +108,7 @@ namespace XOR
             var result = network.Forward(input);
 
             for (int i = 0; i < n; i++)
-                Console.WriteLine("{0} XOR {1} = {2}", data[i][0], data[i][1], isOne(result.Get(i)));
-
+                Console.WriteLine("{0} XOR {1} = {2}", data[i][0], data[i][1], result.Get(0, 0, 0, i)) ;
             return network;
         }
     }
